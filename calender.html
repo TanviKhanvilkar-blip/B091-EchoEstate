@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/evo-calendar@1.1.3/evo-calendar/css/evo-calendar.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/evo-calendar@1.1.3/evo-calendar/css/evo-calendar.royal-navy.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Basic styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        html, body {
+            height: 100%;
+        }
+        .title {
+            font-size: 48px; /* Bigger and more prominent */
+            font-family: 'Poppins', sans-serif; /* Modern and stylish font */
+            font-weight: bold; /* Make it stand out */
+            color: #2c3e50; /* Elegant dark blue */
+            text-transform: uppercase; /* Makes it look premium */
+            text-align: center; /* Centers the title */
+            letter-spacing: 2px; /* Adds spacing for a sleek look */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            margin-top: 20px; /* Adds spacing from the top */
+        }
+        body {
+            display: flex;
+            background: #f0f4f8;
+        }
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #b3cdd1, #d6e6f2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100vh;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            text-align: center;
+            color: #3a506b;
+            font-weight: bold;
+        }
+        .menu {
+            list-style: none;
+            padding: 10px 0;
+        }
+        .menu li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            color: #3a506b;
+        }
+        .menu li:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .menu li i {
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+        }
+        .content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        .hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+        #calendar {
+            width: 90%;
+            max-width: 1200px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        /* Custom highlight for the selected date */
+        .evo-calendar .calendar-events .event-indicator {
+            background-color: #4a6cf7 !important;
+            border-color: #4a6cf7 !important;
+        }
+        .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Style the menu to take up remaining space */
+.menu {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+}
+
+/* Style the Login/Signup option */
+.login-signup {
+    margin-top: auto; /* Push to the bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Add a subtle border above */
+    padding-top: 10px; /* Add some spacing above */
+}
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h1 class="title">Echo Estate</h1>
+        <ul class="menu">
+            <li onclick="window.location.href='home.html'"><i class="fas fa-home"></i> Home</li>
+            <li onclick="window.location.href='conversations.html'"><i class="fas fa-comments"></i> Conversations</li>
+            <li onclick="window.location.href='calender.html'"><i class="fas fa-calendar-alt"></i> Calendar</li>            
+            <li onclick="window.location.href='flat_search.html'"><i class="fas fa-map"></i> Maps</li>
+            <li onclick="window.location.href='profile.html'"><i class="fas fa-user"></i> Profile</li>
+            <!-- Add Login/Signup option at the bottom -->
+            <li onclick="window.location.href='signup.html'" class="login-signup"><i class="fas fa-sign-in-alt"></i> Login/Signup</li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="hero">
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <!-- jQuery and Evo Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/evo-calendar@1.1.3/evo-calendar/js/evo-calendar.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Get the selected date and event name from the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedDate = urlParams.get('date');
+            const eventName = urlParams.get('name');
+
+            // Initialize the calendar
+            $('#calendar').evoCalendar({
+                theme: 'Royal Navy',
+                calendarEvents: selectedDate && eventName
+                    ? [
+                        {
+                            id: 'follow-up',
+                            name: eventName, // Use the custom event name
+                            date: selectedDate,
+                            type: 'event',
+                            color: '#4a6cf7' // Highlight color
+                        }
+                    ]
+                    : []
+            });
+
+            // Optionally, display the selected date and event name in the console
+            if (selectedDate && eventName) {
+                console.log("Selected Follow-Up Date:", selectedDate);
+                console.log("Event Name:", eventName);
+            }
+        });
+    </script>
+</body>
+</html>

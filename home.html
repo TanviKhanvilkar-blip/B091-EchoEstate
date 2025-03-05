@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Communication Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .title {
+            font-size: 48px; /* Bigger and more prominent */
+            font-family: 'Poppins', sans-serif; /* Modern and stylish font */
+            font-weight: bold; /* Make it stand out */
+            color: #2c3e50; /* Elegant dark blue */
+            text-transform: uppercase; /* Makes it look premium */
+            text-align: center; /* Centers the title */
+            letter-spacing: 2px; /* Adds spacing for a sleek look */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            margin-top: 20px; /* Adds spacing from the top */
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f0f4f8;
+        }
+        .sidebar {
+    width: 250px;
+    background: linear-gradient(135deg, #b3cdd1, #d6e6f2);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 100vh; /* Ensures it extends to the full viewport height */
+    height: 100%; /* Ensures it grows with content */
+    position: fixed; /* Fixes the sidebar to the left */
+    top: 0;
+    left: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+        .sidebar h2 {
+            text-align: center;
+            color: #3a506b;
+            font-weight: bold;
+        }
+        .menu {
+            list-style: none;
+            padding: 10px 0;
+        }
+        .menu li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            color: #3a506b;
+        }
+        .menu li:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .menu li i {
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+        }
+        .content {
+    flex: 1;
+    padding: 40px;
+    margin-left: 250px; /* Pushes content to the right */
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #6e8efb, #4a6cf7);
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .hero .cta {
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #4a6cf7;
+            background: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hero .cta:hover {
+            background: #f0f4f8;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card i {
+            font-size: 2rem;
+            color: #4a6cf7;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #3a506b;
+        }
+        .feature-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+        .testimonials {
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .testimonials h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #3a506b;
+        }
+        .testimonial-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .testimonial-card {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .testimonial-card p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .testimonial-card h4 {
+            font-size: 1.2rem;
+            color: #3a506b;
+        } 
+        .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Style the menu to take up remaining space */
+.menu {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+}
+
+/* Style the Login/Signup option */
+.login-signup {
+    margin-top: auto; /* Push to the bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Add a subtle border above */
+    padding-top: 10px; /* Add some spacing above */
+}
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h1 class="title">Echo Estate</h1>
+        <ul class="menu">
+            <li onclick="window.location.href='home.html'"><i class="fas fa-home"></i> Home</li>
+            <li onclick="window.location.href='conversations.html'"><i class="fas fa-comments"></i> Conversations</li>
+            <li onclick="window.location.href='calender.html'"><i class="fas fa-calendar-alt"></i> Calendar</li>            
+            <li onclick="window.location.href='flat_search.html'"><i class="fas fa-map"></i> Maps</li>
+            <li onclick="window.location.href='profile.html'"><i class="fas fa-user"></i> Profile</li>
+            <!-- Add Login/Signup option at the bottom -->
+            <li onclick="window.location.href='signup.html'" class="login-signup"><i class="fas fa-sign-in-alt"></i> Login/Signup</li>
+        
+        </ul>
+    </div>
+    
+    
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Hero Section -->
+<section class="hero">
+    <h1>Making Multilingual Real Estate Conversations Smarter</h1>
+    <p>This platform simplifies real estate communication with powerful tools for translation, conversation summarization, and appointment tracking. Real estate agents can seamlessly interact with clients in multiple languages, extract key insights from discussions, and schedule follow-ups to stay organized. With an intuitive and efficient system, no important detail or opportunity is ever missed.</p>
+    <button onclick="window.location.href='conversations.html'" class="cta">Get Started</button>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="feature-card">
+        <i class="fas fa-language"></i>
+        <h3>Seamless Translation</h3>
+        <p>Break language barriers and communicate in Hindi, Marathi, Telugu, and more.</p>
+    </div>
+    <div class="feature-card">
+        <i class="fas fa-file-alt"></i>
+        <h3>Insightful Summaries</h3>
+        <p>Capture key insights from every conversation and stay on top of important details.</p>
+    </div>
+    <div class="feature-card">
+        <i class="fas fa-bell"></i>
+        <h3>Smart Scheduling</h3>
+        <p>Stay organized with an intuitive calendar for all your upcoming appointments.</p>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonial-cards">
+        <div class="testimonial-card">
+            <p>"This tool has transformed how I handle multilingual client conversations. Highly recommended!"</p>
+            <h4>- Rajesh Mehta</h4>
+        </div>
+        <div class="testimonial-card">
+            <p>"An incredibly useful tool for managing client interactions across different languages. It has made communication so much easier!"</p>
+            <h4>- Amit Sharma</h4>
+        </div>
+    </div>
+</section>
+    </div>
+</body>
+</html>

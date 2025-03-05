@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f0f4f8;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #b3cdd1, #d6e6f2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h1 {
+            text-align: center;
+            color: #3a506b;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 10px 0;
+        }
+
+        .menu li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            color: #3a506b;
+        }
+
+        .menu li:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .menu li i {
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .login-signup {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 10px;
+        }
+
+        /* Content Styles */
+        .content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Profile Section Styles */
+        .profile-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .profile-section h1 {
+            font-size: 2rem;
+            color: #3a506b;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .profile-section p strong {
+            color: #3a506b;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                padding: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .profile-section {
+                padding: 20px;
+            }
+        }
+        .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Style the menu to take up remaining space */
+.menu {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+}
+
+/* Style the Login/Signup option */
+.login-signup {
+    margin-top: auto; /* Push to the bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Add a subtle border above */
+    padding-top: 10px; /* Add some spacing above */
+}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1 class="title">Echo Estate</h1>
+        <ul class="menu">
+            <li onclick="window.location.href='home.html'"><i class="fas fa-home"></i> Home</li>
+            <li onclick="window.location.href='conversations.html'"><i class="fas fa-comments"></i> Conversations</li>
+            <li onclick="window.location.href='calendar.html'"><i class="fas fa-calendar-alt"></i> Calendar</li>
+            <li onclick="window.location.href='flat_search.html'"><i class="fas fa-map"></i> Maps</li>
+            <li onclick="window.location.href='profile.html'"><i class="fas fa-user"></i> Profile</li>
+            <li onclick="window.location.href='signup.html'" class="login-signup"><i class="fas fa-sign-in-alt"></i> Login/Signup</li>
+        </ul>
+    </div>
+    <div class="content">
+        <!-- Profile Section -->
+        <section class="profile-section">
+            <h1>Profile</h1>
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+        </section>
+    </div>
+
+    <script>
+        // Fetch profile data from PHP script
+        fetch('get_profile_data.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update the HTML with the fetched data
+                document.getElementById('username').textContent = data.username;
+                document.getElementById('email').textContent = data.email;
+            })
+            .catch(error => {
+                console.error('Error fetching profile data:', error);
+                alert('Failed to load profile data. Please try again.');
+            });
+    </script>
+</body>
+</html>

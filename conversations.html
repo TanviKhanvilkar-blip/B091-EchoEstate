@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .title {
+            font-size: 48px; /* Bigger and more prominent */
+            font-family: 'Poppins', sans-serif; /* Modern and stylish font */
+            font-weight: bold; /* Make it stand out */
+            color: #2c3e50; /* Elegant dark blue */
+            text-transform: uppercase; /* Makes it look premium */
+            text-align: center; /* Centers the title */
+            letter-spacing: 2px; /* Adds spacing for a sleek look */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            margin-top: 20px; /* Adds spacing from the top */
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            background: #f0f4f8;
+        }
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #b3cdd1, #d6e6f2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100vh;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            text-align: center;
+            color: #3a506b;
+            font-weight: bold;
+        }
+        .menu {
+            list-style: none;
+            padding: 10px 0;
+        }
+        .menu li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            color: #3a506b;
+        }
+        .menu li:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .menu li i {
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+        }
+        .content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #3a506b;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            color: #3a506b;
+            margin-top: 10px;
+        }
+        input, textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #4a6cf7;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #3a5bd1;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 12px;
+            color: #3a506b;
+        }
+        .chat-history {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .ai-assistant-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+        .ai-assistant-button:hover {
+            background-color: #3a5bd1;
+        }
+        .ai-popup {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+        .ai-popup textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            resize: none;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .ai-popup button {
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .ai-popup button:hover {
+            background-color: #3a5bd1;
+        }
+        .ai-popup .output {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .thinking-animation {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .thinking-animation::after {
+            content: " ";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #4a6cf7;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .audio-input-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .audio-input-button:hover {
+            background-color: #218838;
+        }
+        .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Style the menu to take up remaining space */
+.menu {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+}
+
+/* Style the Login/Signup option */
+.login-signup {
+    margin-top: auto; /* Push to the bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Add a subtle border above */
+    padding-top: 10px; /* Add some spacing above */
+}
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h1 class="title">Echo Estate</h1>
+        <ul class="menu">
+            <li onclick="window.location.href='home.html'"><i class="fas fa-home"></i> Home</li>
+            <li onclick="window.location.href='conversations.html'"><i class="fas fa-comments"></i> Conversations</li>
+            <li onclick="window.location.href='calender.html'"><i class="fas fa-calendar-alt"></i> Calendar</li>            
+            <li onclick="window.location.href='flat_search.html'"><i class="fas fa-map"></i> Maps</li>
+            <li onclick="window.location.href='profile.html'"><i class="fas fa-user"></i> Profile</li>
+            <!-- Add Login/Signup option at the bottom -->
+            <li onclick="window.location.href='signup.html'" class="login-signup"><i class="fas fa-sign-in-alt"></i> Login/Signup</li>
+        
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="container">
+            <h2>Real Estate AI Assistant (Gemini Powered)</h2>
+
+            <!-- Conversation History -->
+            <div class="chat-history" id="chatHistory">
+                <h3>Conversation History</h3>
+                <div id="historyContent">Loading...</div>
+            </div>
+
+            <!-- Input Section -->
+            <label for="conversation">Enter Client Conversation:</label>
+            <textarea id="conversation" rows="4" placeholder="Type or paste client conversation..."></textarea>
+
+            <!-- Audio Input Button -->
+            <button class="audio-input-button" onclick="startAudioInput()">🎤 Speak</button>
+
+            <!-- Save Conversation -->
+            <button onclick="saveMessage()">Save Conversation</button>
+
+            <!-- Translation Section -->
+            <label for="targetLanguage">Translate to:</label>
+            <select id="targetLanguage">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Telugu">Telugu</option>
+                <option value="Bengali">Bengali</option>
+            </select>
+            <button onclick="translateText()">Translate Conversation</button>
+            <div class="output" id="translationOutput"></div>
+
+            <!-- Summarization Section -->
+            <button onclick="summarizeText()">Summarize Conversation</button>
+            <div class="output" id="summaryOutput"></div>
+            
+            <!-- Follow-Up Section -->
+            <label for="followUp">Follow-Up Date:</label>
+            <input type="date" id="followUp">
+            
+            <label for="eventName">Event Name:</label>
+            <input type="text" id="eventName" placeholder="Enter event name">
+            
+            <button onclick="scheduleFollowUp()">Schedule Follow-Up</button>
+            <div class="output" id="followUpOutput"></div>
+            </div>
+        </div>
+
+    <!-- AI Assistant Button and Popup -->
+    <button class="ai-assistant-button" onclick="toggleAIPopup()">🤖</button>
+    <div class="ai-popup" id="aiPopup">
+        <h3>AI Assistant</h3>
+        <textarea id="aiInput" placeholder="Ask me anything about real estate..."></textarea>
+        <button onclick="askAI()">Ask</button>
+        <button onclick="refreshConversation()">🔄 Refresh</button>
+        <div class="thinking-animation" id="thinkingAnimation"></div>
+        <div class="output" id="aiOutput"></div>
+    </div>
+
+    <script>
+        const apiKey = "AIzaSyBFdt4c_jDdngFtHAXMpSEs805hpgt70dI"; // Replace with your actual API key
+
+        // Load chat history on page load
+        window.onload = loadChatHistory;
+
+        function saveMessage() {
+            const message = document.getElementById("conversation").value;
+
+            if (!message.trim()) {
+                alert("Please enter a conversation.");
+                return;
+            }
+
+            fetch('save_message.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `message=${encodeURIComponent(message)}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadChatHistory(); // Reload history after saving
+            })
+            .catch(error => console.error("Error saving message:", error));
+        }
+
+        function loadChatHistory() {
+            fetch('get_history.php')
+                .then(response => response.json())
+                .then(data => {
+                    const historyContent = document.getElementById("historyContent");
+                    historyContent.innerHTML = "";
+
+                    if (data.length === 0) {
+                        historyContent.innerHTML = "<p>No conversation history yet.</p>";
+                        return;
+                    }
+
+                    data.forEach(msg => {
+                        historyContent.innerHTML += `
+                            <div class="output">
+                                <p><strong>${msg.timestamp}</strong></p>
+                                <p>${msg.message}</p>
+                            </div>`;
+                    });
+                })
+                .catch(error => console.error("Error loading chat history:", error));
+        }
+
+        async function translateText() {
+            const text = document.getElementById("conversation").value;
+            const targetLanguage = document.getElementById("targetLanguage").value;
+
+            if (!text.trim()) {
+                alert("Please enter a conversation.");
+                return;
+            }
+
+            const prompt = `Translate the following text to ${targetLanguage}:\n\n${text}`;
+
+            try {
+                const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-002:generateContent?key=" + apiKey, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error("API Error:", data.error.message);
+                    alert("API Error: " + data.error.message);
+                    return;
+                }
+
+                const translatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Translation failed. No response from API.";
+
+                document.getElementById("translationOutput").innerHTML = `
+                    <p>📄 <strong>Translated Text:</strong></p>
+                    <p>${translatedText}</p>
+                `;
+            } catch (error) {
+                console.error("Request Error:", error);
+                alert("Translation failed. Check console for details.");
+            }
+        }
+
+        async function summarizeText() {
+            const text = document.getElementById("conversation").value;
+
+            if (!text.trim()) {
+                alert("Please enter a conversation.");
+                return;
+            }
+
+            const prompt = `Summarize the following client conversation briefly:\n\n${text}`;
+
+            try {
+                const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-002:generateContent?key=" + apiKey, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error("API Error:", data.error.message);
+                    alert("API Error: " + data.error.message);
+                    return;
+                }
+
+                const summaryText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Summary failed. No response from API.";
+
+                document.getElementById("summaryOutput").innerHTML = `
+                    <p>📄 <strong>Conversation Summary:</strong></p>
+                    <p>${summaryText}</p>
+                `;
+            } catch (error) {
+                console.error("Request Error:", error);
+                alert("Summarization failed. Check console for details.");
+            }
+        }
+
+        // AI Assistant Functions
+        function toggleAIPopup() {
+            const popup = document.getElementById("aiPopup");
+            popup.style.display = popup.style.display === "block" ? "none" : "block";
+        }
+
+        async function askAI() {
+            const input = document.getElementById("aiInput").value;
+
+            if (!input.trim()) {
+                alert("Please enter a question.");
+                return;
+            }
+
+            // Show thinking animation
+            const thinkingAnimation = document.getElementById("thinkingAnimation");
+            thinkingAnimation.style.display = "block";
+
+            // Check if the question is related to real estate
+            const realEstateKeywords = [
+                "real estate", "property", "house", "apartment", "land", "mortgage", "rent", "buy", "sell", "lease", "investment", "broker", "agent"
+            ];
+            const isRealEstateQuestion = realEstateKeywords.some(keyword => input.toLowerCase().includes(keyword));
+
+            if (!isRealEstateQuestion) {
+                document.getElementById("aiOutput").innerHTML = `
+                    <p>🤖 <strong>AI Response:</strong></p>
+                    <p>I can only answer questions related to real estate. Please ask a real estate question.</p>
+                `;
+                thinkingAnimation.style.display = "none";
+                return;
+            }
+
+            // Include summarized content as context if available
+            const summarizedContent = document.getElementById("summaryOutput").innerText;
+            const context = summarizedContent ? `Context from summarized conversation:\n${summarizedContent}\n\n` : "";
+
+            const prompt = `You are a helpful AI assistant specialized in real estate. ${context}Answer the following question in detail:\n\n${input}`;
+
+            try {
+                const response = await fetch("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-002:generateContent?key=" + apiKey, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error("API Error:", data.error.message);
+                    alert("API Error: " + data.error.message);
+                    return;
+                }
+
+                const aiResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response from AI.";
+
+                document.getElementById("aiOutput").innerHTML = `
+                    <p>🤖 <strong>AI Response:</strong></p>
+                    <p>${aiResponse}</p>
+                `;
+            } catch (error) {
+                console.error("Request Error:", error);
+                alert("AI request failed. Check console for details.");
+            } finally {
+                thinkingAnimation.style.display = "none";
+            }
+        }
+
+        // Refresh Conversation Function
+        function refreshConversation() {
+            document.getElementById("aiInput").value = ""; // Clear input
+            document.getElementById("aiOutput").innerHTML = ""; // Clear output
+        }
+
+        // Audio Input Functionality
+        function startAudioInput() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US"; // Default language
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById("conversation").value = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                alert("Speech recognition failed. Please try again.");
+            };
+        }
+
+        function scheduleFollowUp() {
+            const followUpDate = document.getElementById("followUp").value;
+            const eventName = document.getElementById("eventName").value;
+
+            if (!followUpDate || !eventName) {
+                alert("Please select a date and enter an event name.");
+                return;
+            }
+
+            // Redirect to the calendar page with the selected date and event name as URL parameters
+            window.location.href = `calender.html?date=${followUpDate}&name=${encodeURIComponent(eventName)}`;
+        }
+    </script>
+</body>
+</html>

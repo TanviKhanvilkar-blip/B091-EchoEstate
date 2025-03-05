@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Sidebar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .title {
+            font-size: 48px; /* Bigger and more prominent */
+            font-family: 'Poppins', sans-serif; /* Modern and stylish font */
+            font-weight: bold; /* Make it stand out */
+            color: #2c3e50; /* Elegant dark blue */
+            text-transform: uppercase; /* Makes it look premium */
+            text-align: center; /* Centers the title */
+            letter-spacing: 2px; /* Adds spacing for a sleek look */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            margin-top: 20px; /* Adds spacing from the top */
+        }
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f0f4f8;
+        }
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #b3cdd1, #d6e6f2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100vh;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            text-align: center;
+            color: #3a506b;
+            font-weight: bold;
+        }
+        .menu {
+            list-style: none;
+            padding: 10px 0;
+        }
+        .menu li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            color: #3a506b;
+        }
+        .menu li:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .menu li i {
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+        }
+        .content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #6e8efb, #4a6cf7);
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none; /* Hide hero section by default */
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .hero .cta {
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #4a6cf7;
+            background: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hero .cta:hover {
+            background: #f0f4f8;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            display: none; /* Hide features section by default */
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card i {
+            font-size: 2rem;
+            color: #4a6cf7;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #3a506b;
+        }
+        .feature-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+        .map-section {
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .map-search {
+            display: flex;
+            gap: 10px;
+        }
+        .map-search input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+        .map-search button {
+            padding: 10px 20px;
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .map-search button:hover {
+            background: #3a506b;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 20px;
+        }
+        .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Style the menu to take up remaining space */
+.menu {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+}
+
+/* Style the Login/Signup option */
+.login-signup {
+    margin-top: auto; /* Push to the bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Add a subtle border above */
+    padding-top: 10px; /* Add some spacing above */
+}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1 class="title">Echo Estate</h1>
+        <ul class="menu">
+            <li onclick="window.location.href='home.html'"><i class="fas fa-home"></i> Home</li>
+            <li onclick="window.location.href='conversations.html'"><i class="fas fa-comments"></i> Conversations</li>
+            <li onclick="window.location.href='calender.html'"><i class="fas fa-calendar-alt"></i> Calendar</li>    
+            <li onclick="window.location.href='flat_search.html'"><i class="fas fa-map"></i> Maps</li>        
+            <li onclick="window.location.href='profile.html'"><i class="fas fa-user"></i> Profile</li>
+            <!-- Add Login/Signup option at the bottom -->
+            <li onclick="window.location.href='signup.html'" class="login-signup"><i class="fas fa-sign-in-alt"></i> Login/Signup</li>
+        
+        </ul>
+    </div>
+    <div class="content">
+        <section class="hero">
+            <h1>Breaking Language Barriers in Real Estate Conversations!</h1>
+            <p>Seamless multilingual communication, smart insights, and hassle-free follow-ups—all in one platform.</p>
+            <button class="cta">Get Started</button>
+        </section>
+        <section class="features">
+            <div class="feature-card">
+                <i class="fas fa-language"></i>
+                <h3>Real-time Translation</h3>
+                <p>Understand clients in any language.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Conversation Summarization</h3>
+                <p>Never miss key details from discussions.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-bell"></i>
+                <h3>Follow-Up Tracking</h3>
+                <p>Smart reminders to ensure no deal is lost.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chart-pie"></i>
+                <h3>AI-Powered Insights</h3>
+                <p>Actionable recommendations for better conversions.</p>
+            </div>
+        </section>
+
+        <!-- Map Section (Visible by Default) -->
+        <section id="map-section" class="map-section">
+            <div class="map-search">
+                <input type="text" id="map-search-bar" placeholder="Search for a location or flat (e.g., Mumbai)">
+                <button id="map-search-button">Search</button>
+            </div>
+            <div id="map"></div>
+        </section>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let marker;
+
+        // Custom data (replace with your own data)
+        const flats = [
+        
+    {
+        "name": "Flat 29",
+        "address": "C-Scheme, Jaipur",
+        "price": "₹1.9 Cr",
+        "lat": 26.9124,
+        "lng": 75.7873
+    },
+    {
+        "name": "Flat 30",
+        "address": "Malviya Nagar, Jaipur",
+        "price": "₹1.5 Cr",
+        "lat": 26.8500,
+        "lng": 75.8144
+    },
+    {
+        "name": "Flat 31",
+        "address": "Mansarovar, Jaipur",
+        "price": "₹1.2 Cr",
+        "lat": 26.8514,
+        "lng": 75.7597
+    },
+    {
+        "name": "Flat 32",
+        "address": "Vaishali Nagar, Jaipur",
+        "price": "₹1.6 Cr",
+        "lat": 26.9163,
+        "lng": 75.7434
+    }
+,
+
+    {
+        "name": "Flat 25",
+        "address": "Salt Lake City, Kolkata",
+        "price": "₹2.2 Cr",
+        "lat": 22.5830,
+        "lng": 88.4180
+    },
+    {
+        "name": "Flat 26",
+        "address": "Ballygunge, Kolkata",
+        "price": "₹3.4 Cr",
+        "lat": 22.5246,
+        "lng": 88.3642
+    },
+    {
+        "name": "Flat 27",
+        "address": "New Town, Kolkata",
+        "price": "₹2.1 Cr",
+        "lat": 22.5926,
+        "lng": 88.4799
+    },
+    {
+        "name": "Flat 28",
+        "address": "Alipore, Kolkata",
+        "price": "₹4.7 Cr",
+        "lat": 22.5322,
+        "lng": 88.3293
+    }
+,
+
+    {
+        "name": "Flat 21",
+        "address": "Adyar, Chennai",
+        "price": "₹2.4 Cr",
+        "lat": 13.0068,
+        "lng": 80.2550
+    },
+    {
+        "name": "Flat 22",
+        "address": "Nungambakkam, Chennai",
+        "price": "₹3.1 Cr",
+        "lat": 13.0605,
+        "lng": 80.2454
+    },
+    {
+        "name": "Flat 23",
+        "address": "Anna Nagar, Chennai",
+        "price": "₹2.7 Cr",
+        "lat": 13.0850,
+        "lng": 80.2101
+    },
+    {
+        "name": "Flat 24",
+        "address": "Velachery, Chennai",
+        "price": "₹1.8 Cr",
+        "lat": 12.9784,
+        "lng": 80.2180
+    }
+,
+
+    {
+        "name": "Flat 17",
+        "address": "Banjara Hills, Hyderabad",
+        "price": "₹4.2 Cr",
+        "lat": 17.4100,
+        "lng": 78.4483
+    },
+    {
+        "name": "Flat 18",
+        "address": "Gachibowli, Hyderabad",
+        "price": "₹2.1 Cr",
+        "lat": 17.4448,
+        "lng": 78.3498
+    },
+    {
+        "name": "Flat 19",
+        "address": "Madhapur, Hyderabad",
+        "price": "₹3.3 Cr",
+        "lat": 17.4504,
+        "lng": 78.3886
+    },
+    {
+        "name": "Flat 20",
+        "address": "Jubilee Hills, Hyderabad",
+        "price": "₹5.7 Cr",
+        "lat": 17.4337,
+        "lng": 78.4077
+    }
+,
+
+    {
+        "name": "Flat 9",
+        "address": "Koramangala, Bangalore",
+        "price": "₹2.8 Cr",
+        "lat": 12.9352,
+        "lng": 77.6245
+    },
+    {
+        "name": "Flat 10",
+        "address": "Indiranagar, Bangalore",
+        "price": "₹3.5 Cr",
+        "lat": 12.9716,
+        "lng": 77.6412
+    },
+    {
+        "name": "Flat 11",
+        "address": "Whitefield, Bangalore",
+        "price": "₹2.3 Cr",
+        "lat": 12.9698,
+        "lng": 77.7499
+    },
+    {
+        "name": "Flat 12",
+        "address": "JP Nagar, Bangalore",
+        "price": "₹1.9 Cr",
+        "lat": 12.9063,
+        "lng": 77.5854
+    }
+,
+
+    {
+        "name": "Flat 5",
+        "address": "Greater Kailash, Delhi",
+        "price": "₹3.2 Cr",
+        "lat": 28.5485,
+        "lng": 77.2376
+    },
+    {
+        "name": "Flat 6",
+        "address": "Connaught Place, Delhi",
+        "price": "₹5.8 Cr",
+        "lat": 28.6328,
+        "lng": 77.2207
+    },
+    {
+        "name": "Flat 7",
+        "address": "Dwarka, Delhi",
+        "price": "₹1.6 Cr",
+        "lat": 28.5896,
+        "lng": 77.0430
+    },
+    {
+        "name": "Flat 8",
+        "address": "Rohini, Delhi",
+        "price": "₹1.2 Cr",
+        "lat": 28.7191,
+        "lng": 77.1145
+    }
+,
+
+    {
+        "name": "Flat 1",
+        "address": "Bandra West, Mumbai",
+        "price": "₹4.2 Cr",
+        "lat": 19.0595,
+        "lng": 72.8302
+    },
+    {
+        "name": "Flat 2",
+        "address": "Malabar Hill, Mumbai",
+        "price": "₹9.8 Cr",
+        "lat": 18.9555,
+        "lng": 72.8050
+    },
+    {
+        "name": "Flat 3",
+        "address": "Powai, Mumbai",
+        "price": "₹2.5 Cr",
+        "lat": 19.1187,
+        "lng": 72.9096
+    },
+    {
+        "name": "Flat 4",
+        "address": "Juhu, Mumbai",
+        "price": "₹5.6 Cr",
+        "lat": 19.0991,
+        "lng": 72.8264
+    }
+,
+    
+        {
+                "name": "Flat 1",
+                "address": "Sector 56, Gurgaon",
+                "price": "₹1.2 Cr",
+                "lat": 28.4567,
+                "lng": 77.0321
+            },
+            {
+                "name": "Flat 2",
+                "address": "DLF Phase 2, Gurgaon",
+                "price": "₹90 Lakh",
+                "lat": 28.4595,
+                "lng": 77.0266
+            },
+            {
+                "name": "Flat 3",
+                "address": "MG Road, Gurgaon",
+                "price": "₹2.5 Cr",
+                "lat": 28.4620,
+                "lng": 77.0300
+            },
+            {
+                "name": "Flat 4",
+                "address": "Koregaon Park, Pune",
+                "price": "₹1.8 Cr",
+                "lat": 18.5362,
+                "lng": 73.8936
+            },
+            {
+                "name": "Flat 5",
+                "address": "Hinjewadi, Pune",
+                "price": "₹95 Lakh",
+                "lat": 18.5912,
+                "lng": 73.7380
+            },
+            {
+                "name": "Flat 6",
+                "address": "Kothrud, Pune",
+                "price": "₹1.1 Cr",
+                "lat": 18.5074,
+                "lng": 73.8077
+            },
+            {
+                "name": "Flat 7",
+                "address": "Viman Nagar, Pune",
+                "price": "₹1.3 Cr",
+                "lat": 18.5679,
+                "lng": 73.9153
+            },
+            {
+                "name": "Flat 8",
+                "address": "Bandra West, Mumbai",
+                "price": "₹3.2 Cr",
+                "lat": 19.0551,
+                "lng": 72.8295
+            },
+            {
+                "name": "Flat 9",
+                "address": "Andheri East, Mumbai",
+                "price": "₹2.1 Cr",
+                "lat": 19.1180,
+                "lng": 72.8463
+            },
+            {
+                "name": "Flat 10",
+                "address": "Worli, Mumbai",
+                "price": "₹4.5 Cr",
+                "lat": 19.0021,
+                "lng": 72.8158
+            },
+            {
+                "name": "Flat 11",
+                "address": "Thane West, Mumbai",
+                "price": "₹1.7 Cr",
+                "lat": 19.2183,
+                "lng": 72.9781
+            },
+            {
+                "name": "Flat 12",
+                "address": "Indiranagar, Bangalore",
+                "price": "₹2.3 Cr",
+                "lat": 12.9716,
+                "lng": 77.6406
+            },
+            {
+                "name": "Flat 13",
+                "address": "Electronic City, Bangalore",
+                "price": "₹90 Lakh",
+                "lat": 12.8391,
+                "lng": 77.6770
+            },
+            {
+                "name": "Flat 14",
+                "address": "Whitefield, Bangalore",
+                "price": "₹1.5 Cr",
+                "lat": 12.9698,
+                "lng": 77.7499
+            },
+            {
+                "name": "Flat 15",
+                "address": "Jayanagar, Bangalore",
+                "price": "₹1.8 Cr",
+                "lat": 12.9250,
+                "lng": 77.5938
+            },
+            {
+                "name": "Flat 16",
+                "address": "Connaught Place, Delhi",
+                "price": "₹3.8 Cr",
+                "lat": 28.6315,
+                "lng": 77.2167
+            },
+            {
+                "name": "Flat 17",
+                "address": "Dwarka, Delhi",
+                "price": "₹1.4 Cr",
+                "lat": 28.5904,
+                "lng": 77.0575
+            },
+            {
+                "name": "Flat 18",
+                "address": "Vasant Kunj, Delhi",
+                "price": "₹2.2 Cr",
+                "lat": 28.5204,
+                "lng": 77.1573
+            },
+            {
+                "name": "Flat 19",
+                "address": "Rohini, Delhi",
+                "price": "₹1.2 Cr",
+                "lat": 28.7342,
+                "lng": 77.1225
+            }
+        ];
+
+        // Initialize the map
+        function initMap() {
+            map = L.map('map').setView([20.5937, 78.9629], 5); // Center on India
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add markers for custom data
+            flats.forEach(flat => {
+                L.marker([flat.lat, flat.lng]).addTo(map)
+                    .bindPopup(`
+                        <b>${flat.name}</b><br>
+                        <p>Address: ${flat.address}</p>
+                        <p>Price: ${flat.price}</p>
+                    `)
+                    .openPopup();
+            });
+
+            // Add search functionality
+            const searchButton = document.getElementById('map-search-button');
+            searchButton.addEventListener('click', () => {
+                const query = document.getElementById('map-search-bar').value;
+                if (query) {
+                    handleSearch(query);
+                } else {
+                    alert('Please enter a search query.');
+                }
+            });
+        }
+
+        // Function to search for a location using Nominatim
+        function searchLocation(location) {
+            const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`;
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const { lat, lon } = data[0];
+
+                        // Move the map to the searched location
+                        map.setView([lat, lon], 13);
+
+                        // Remove previous marker if exists
+                        if (marker) {
+                            map.removeLayer(marker);
+                        }
+
+                        // Add a new marker at the searched location
+                        marker = L.marker([lat, lon]).addTo(map)
+                            .bindPopup(`<b>Search Result</b><br>${location}`)
+                            .openPopup();
+
+                        // Check if searched location matches any flat's address
+                        const matchedFlat = flats.find(flat => 
+                            flat.address.toLowerCase().includes(location.toLowerCase())
+                        );
+
+                        if (matchedFlat) {
+                            // Move map to the flat's location
+                            map.setView([matchedFlat.lat, matchedFlat.lng], 15);
+
+                            // Highlight matched flat
+                            marker = L.marker([matchedFlat.lat, matchedFlat.lng]).addTo(map)
+                                .bindPopup(`
+                                    <b>${matchedFlat.name}</b><br>
+                                    <p>Address: ${matchedFlat.address}</p>
+                                    <p>Price: ${matchedFlat.price}</p>
+                                `)
+                                .openPopup();
+                        }
+                    } else {
+                        alert('Location not found! Try searching for another place.');
+                    }
+                })
+                .catch(error => console.error('Error fetching location:', error));
+        }
+
+        // Function to handle search button click
+        function handleSearch(query) {
+            searchLocation(query);
+        }
+
+        // Initialize the map when the page loads
+        initMap();
+    </script>
+</body>
+</html>
